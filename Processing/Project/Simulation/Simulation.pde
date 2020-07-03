@@ -1,29 +1,21 @@
 import java.util.Map;
 
-int AMOUNT = 500;
-int graph_time = 500;
-
-
-
-int TOUCH =16;
-
-int measPeriod = -1; 
+int AMOUNT = 500;//Кол-во частиц
+int graph_time = 500;//Время эксперимента
 int fps = 300;
-int emoji = 1;
+
+
+int TOUCH = 16;
 
 int objSize = 3;
 int windowW = 1920;
 int windowH = 1080;
-
-
 int time = 1;
-
 float velocityMid = 0;
 
-int lastInfectedAmount = 0;
 int border = 10;
 int minPos = border+objSize/2;
-int maxPos = windowH-border-objSize/2-emoji*objSize*5;
+int maxPos = windowH-border-objSize/2-objSize*5;
 int plotCount = 0;
 PrintWriter logs;
 String log_name = "";    
@@ -38,6 +30,7 @@ PImage mask;
 PrintWriter config;
 
 int startVelocity = 10;
+
 void settings() {
   size(windowW, windowH);
   smooth(8);
@@ -79,10 +72,12 @@ void draw() {
   fill(#ffffff);
   rect(border, border, windowH-border*2, windowH-border*2);  
   noStroke();
-  moveObj();
+  if( moveObj() )
+    exit();
+  
 }
 
-void moveObj() {
+boolean moveObj() {
 
   for (int i = 0; i < AMOUNT; i++) {
     for (int j = 0; j < AMOUNT; j++) {
@@ -138,12 +133,12 @@ void moveObj() {
   }  
   int maxVelocity = startVelocity*3;
   int[] data = new int[maxVelocity];
+  
   if(flag == false && time % graph_time == 0){
   for(int i = 0 ; i < AMOUNT ; i++){
     flag = true;
     
     int k = int(dots[i].velocity.getLength());
-    System.out.println(k);
     if(k >= maxVelocity - 1 )
     {
       data[maxVelocity - 1]+= 1;
@@ -151,8 +146,6 @@ void moveObj() {
     data[k] += 1;
     }
   }
-  }
-  if (time % graph_time == 0) {
     String l = "";
     for(int i = 0 ; i < maxVelocity ; i++)
     {
@@ -166,27 +159,28 @@ void moveObj() {
 
   fill(#505050);
   for (int i = 0; i < AMOUNT; i++) {
-    if (emoji == 0) {
-      fill(#ff0000);
-    } else {
       image(mask, dots[i].position.x, dots[i].position.y, objSize*5, objSize*5);
-    }
   }
   time++;
 
   fill(#ffffff);
-  rect(windowH, 0, windowH+150, 65);
+  rect(windowH, 0, windowH+150, 75);
   fill(#505050);
+  
   text("Probable:", windowH, 30);
   text(getProb(), windowH+120, 30);
   
   text("Average:", windowH, 45);
   text(getMid(), windowH+120, 45);
+  
   text("Rms:", windowH, 60);
   text(getRms(), windowH+120, 60);
 
-  text("Time:", windowH, 70);
-  text(time, windowH+80, 70);
+  text("Time:", windowH, 75);
+  text(time, windowH+120, 75);
+  
+  return flag;
+  
 }
 
 
