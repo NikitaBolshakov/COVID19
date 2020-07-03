@@ -1,8 +1,9 @@
 import java.util.Map;
 
 int AMOUNT = 500;//Кол-во частиц
-int graph_time = 500;//Время эксперимента
+int graph_time = 3000;//Время эксперимента
 int fps = 300;
+int startVelocity = 10;//Начальная скорость
 
 
 int TOUCH = 16;
@@ -29,7 +30,7 @@ PFont Font1;
 PImage mask;
 PrintWriter config;
 
-int startVelocity = 10;
+
 
 void settings() {
   size(windowW, windowH);
